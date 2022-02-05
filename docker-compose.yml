@@ -1,0 +1,41 @@
+version: '3'
+services:
+  db:
+    image: 'postgres:latest'
+    environment:
+      - POSTGRES_PASSWORD=a1
+      - PGDATA=/var/lib/postgresql/data/eCommerce/
+    volumes:
+      - /Users/basarmemis/development/repos/eCommerce/eCommerceData:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  pgadmin4:
+    image: 'dpage/pgadmin4'
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=basar.memis@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=a1
+      - PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION=True
+      - PGADMIN_CONFIG_LOGIN_BANNER="Authorised users only!"
+      - PGADMIN_CONFIG_CONSOLE_LOG_LEVEL=1
+      - name=value
+    ports:
+      - "5050:80"
+
+  api:
+    build:
+      dockerfile: Dockerfile
+      context: "./eCommerceApi"
+    environment:
+      - ConnectionStrings__StoreDbConnection=Host=db;Database=eCommerce;Username=postgres;Password=a1
+    ports:
+      - "5000:80"
+
+  ui:
+    build:
+      dockerfile: Dockerfile
+      context: "./eCommerceUi"
+    ports:
+      - "3000:3000"
+    volumes:
+      - /Users/basarmemis/development/repos/eCommerce/eCommerceUi:/app
