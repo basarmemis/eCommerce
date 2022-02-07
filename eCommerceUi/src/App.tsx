@@ -14,24 +14,25 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ServerError from './components/errors/ServerError';
 import NotFound from './components/errors/NotFound';
-import BasketPage from './pages/BasketPage';
-import { useStoreContext } from './context/StoreContext';
 import agent from './api/agent';
 import { getCookie } from './helpers/helpers';
 import LoadingSpinner from './components/loadingSpinner/LoadingSpinner';
 import CheckoutPage from './pages/CheckoutPage';
+import BasketPage from './pages/basket/BasketPage';
+import { useAppDispatch } from './store/configureStore';
+import { setBasket } from './pages/basket/basketSlice';
 
 
 
 function App() {
-  const { setBasket } = useStoreContext();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const buyerId = getCookie("buyerId");
     if (buyerId) {
       agent.Basket.get()
-        .then(basket => setBasket(basket))
+        .then(basket => dispatch(setBasket(basket)))
         .catch(error => console.log(error))
         .finally(() => setLoading(false));
     }
@@ -39,7 +40,7 @@ function App() {
       setLoading(false);
     }
 
-  }, [setBasket])
+  }, [dispatch])
 
 
 

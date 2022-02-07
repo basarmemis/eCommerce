@@ -1,31 +1,22 @@
-import { Product } from "../../models/product";
+
 import { ProductList } from "./ProductList";
-import { useState, useEffect } from "react";
-import agent from "../../api/agent";
+import { useEffect } from "react";
 import LoadingSpinner from "../loadingSpinner/LoadingSpinner";
 import NotFound from "../errors/NotFound";
+import { useAppDispatch, useAppSelector } from "../../store/configureStore";
+import { fetchProductsAsync, productSelectors } from "./catalogSlice";
 
 export default function Catalog() {
-    const [loading, setLoading] = useState(true);
-
-    const [products, setProducts] = useState<Product[] | undefined>(undefined);
+    const products = useAppSelector(productSelectors.selectAll);
+    const { productsLoaded, status } = useAppSelector(state => state.catalog);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
-        agent.Catalog.list()
-            .then(products => setProducts(products))
-            .catch(error => console.log(error))
-            .finally(() => setLoading(false));
-        return cleanupTheState;
-    }, []);
+        if (!productsLoaded) dispatch(fetchProductsAsync());
+    }, [productsLoaded, dispatch]);
 
 
-    // useEffect'teki return bloğu component Unmount olunca cagrılıyormus. onu test ettik
-    const cleanupTheState = () => {
-        console.log("state cleaned");
-        setProducts([]);
-    }
-
-    if (loading) return (<LoadingSpinner message={'Catalog is Loading...'} />);
+    if ((status === "pendingFetchProducts")) return (<LoadingSpinner message={'Catalog is Loading...'} />);
     if (!products) return (<NotFound />);
     return (
         <ProductList

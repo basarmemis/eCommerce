@@ -18,7 +18,7 @@ import { ListItemButton, Switch } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { ShoppingCart } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
-import { useStoreContext } from '../../context/StoreContext';
+import { useAppSelector } from '../../store/configureStore';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -67,7 +67,7 @@ interface Props {
 
 export default function Navbar({ handleDarkMode, darkMode }: Props) {
 
-    const { basket } = useStoreContext();
+    const { basket } = useAppSelector(state => state.basket);
     const basketItemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -216,7 +216,7 @@ export default function Navbar({ handleDarkMode, darkMode }: Props) {
         */}
         <Box sx={{ flexGrow: 1, marginBottom: 4 }}>
             <AppBar position="static">
-                <Toolbar>
+                <Toolbar sx={{ overflowX: "auto" }}>
                     <IconButton
                         size="large"
                         edge="start"
