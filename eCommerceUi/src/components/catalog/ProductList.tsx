@@ -12,7 +12,7 @@ export function ProductList({ products }: Props) {
         <Grid container rowSpacing={{ xs: 4, sm: 0, md: 0 }} columnSpacing={{ xs: 4, sm: 0, md: 0 }} columns={12}>
             {
                 products.map(product =>
-                    <Grid item xs={6} sm={4} md={3} xl={3} key={product.id}>
+                    <Grid item xs={12} sm={6} md={4} xl={3} key={product.id}>
                         <ProductCard
                             product={product}
                         />
