@@ -50,8 +50,8 @@ namespace API.Controllers
         [Route("filters")]
         public async Task<IActionResult> GetFilters()
         {
-            var brands = await _context.Products.Select(p => p.Brand).Distinct().ToListAsync();
-            var types = await _context.Products.Select(p => p.Type).Distinct().ToListAsync();
+            var brands = await _context.Products.Select(p => p.Brand).Distinct().OrderBy(b => b).ToListAsync();
+            var types = await _context.Products.Select(p => p.Type).Distinct().OrderBy(t => t).ToListAsync();
             return StatusCode(StatusCodes.Status200OK, new { brands = brands, types = types });
         }
     }
